@@ -34,6 +34,13 @@
 			<version>3.0.9.Final</version>
 		</dependency>
 
+		<!--Spring Dependancy -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>4.1.5.RELEASE</version>
+		</dependency>
+
 
 	</dependencies>
 	<build>
