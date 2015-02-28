@@ -24,22 +24,33 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import com.ravindu.rqs.config.TestConfiguration;
+import com.ravindu.rqs.service.TestService;
+
 /**
  * 
  * @author Ravindu Eranga Abaywardena
  */
 @Path("/TestClass")
-public class Test implements Serializable{
+public class Test implements Serializable {
   
+  /**
+   * 
+   */
   private static final long serialVersionUID = -262701666015379272L;
-
+  
   @GET
   @Path("/hello")
   public Response heloMessage() {
   
-    String result = "Hello Word!!!!!!!!!";
+    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(TestConfiguration.class);
+    TestService service = ctx.getBean(TestService.class);
     
-    return Response.status(200).entity(result).build();
+    String output = service.print("Hello Word!!!!!!!!!");
+    
+    return Response.status(200).entity(output).build();
   }
   
   
