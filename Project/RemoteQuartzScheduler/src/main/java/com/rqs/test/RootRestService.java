@@ -16,7 +16,7 @@
 //
 //*************************************************************************************************
 
-package com.ravindu.rqs.test;
+package com.rqs.test;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

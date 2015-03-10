@@ -16,7 +16,7 @@
 //
 // *************************************************************************************************
 
-package com.ravindu.rqs.test;
+package com.rqs.test;
 
 import java.io.Serializable;
 
@@ -26,8 +26,9 @@ import javax.ws.rs.core.Response;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import com.ravindu.rqs.config.TestConfiguration;
-import com.ravindu.rqs.service.TestService;
+import com.rqs.config.TestConfiguration;
+import com.rqs.model.Stock;
+import com.rqs.service.StockService;
 
 /**
  * 
@@ -41,11 +42,13 @@ public class Test implements Serializable {
    */
   private static final long serialVersionUID = -262701666015379272L;
   
+  AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(TestConfiguration.class);
+  
   @GET
   @Path("/hello")
   public Response heloMessage() {
   
-    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(TestConfiguration.class);
+    
     TestService service = ctx.getBean(TestService.class);
     
     String output = service.print("Hello Word!!!!!!!!!");
@@ -53,5 +56,20 @@ public class Test implements Serializable {
     return Response.status(200).entity(output).build();
   }
   
+  @GET
+  @Path("/hibernate")
+  public Response hibernateTest() {
+  
+    
+    StockService service = (StockService) ctx.getBean("stockService");
+    
+    Stock s = new Stock();
+    s.setStockCode("S001");
+    s.setStockName("Test Stock");    
+    
+    service.save(s);
+    
+    return Response.status(200).build();
+  }
   
 }

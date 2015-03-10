@@ -1,5 +1,5 @@
 // PROJECT : RemoteQuartzScheduler
-// CLASS : TestConfiguration.java
+// CLASS : TestService.java
 //
 // ************************************************************************************************
 //
@@ -16,25 +16,17 @@
 //
 // *************************************************************************************************
 
-package com.ravindu.rqs.config;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-
-import com.ravindu.rqs.service.TestService;
+package com.rqs.test;
 
 /**
  * 
  * @author Ravindu Eranga Abaywardena
  */
-@Configuration
-@ComponentScan
-public class TestConfiguration {
+public class TestService {
   
-  @Bean
-  public TestService getService() {
+  public String print(String msg) {
   
-    return new TestService();
+    String s = "You added " + msg;
+    return s;
   }
 }

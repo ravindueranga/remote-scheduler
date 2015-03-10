@@ -1,5 +1,5 @@
 // PROJECT : RemoteQuartzScheduler
-// CLASS : TestService.java
+// CLASS : StockBo.java
 //
 // ************************************************************************************************
 //
@@ -16,17 +16,20 @@
 //
 // *************************************************************************************************
 
-package com.ravindu.rqs.service;
+package com.rqs.service;
+
+import com.rqs.model.Stock;
 
 /**
  * 
  * @author Ravindu Eranga Abaywardena
  */
-public class TestService {
+public interface StockService {
   
-  public String print(String msg) {
+  void save(Stock stock);
   
-    String s = "You added " + msg;
-    return s;
-  }
+  void update(Stock stock);
+  
+  void delete(Stock stock);
+  
 }
