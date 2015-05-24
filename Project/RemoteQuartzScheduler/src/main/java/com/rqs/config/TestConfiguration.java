@@ -18,9 +18,12 @@
 
 package com.rqs.config;
 
+import java.util.Map;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,6 +33,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
+import org.springframework.scheduling.quartz.JobDetailFactoryBean;
+import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.rqs.test.TestService;
@@ -40,7 +48,7 @@ import com.rqs.test.TestService;
  */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackages = "com.ravindu.rqs")
+@ComponentScan(basePackages = "com.rqs")
 @PropertySource(value = {"classpath:application.properties"})
 public class TestConfiguration {
   
@@ -95,4 +103,65 @@ public class TestConfiguration {
     return txManager;
   }
   
+  public MethodInvokingJobDetailFactoryBean simpleJobDetail() {
+  
+    MethodInvokingJobDetailFactoryBean methodInvokingJobDetailFactoryBean = new MethodInvokingJobDetailFactoryBean();
+//    methodInvokingJobDetailFactoryBean.setTargetObject(targetObject);
+    methodInvokingJobDetailFactoryBean.setTargetMethod("printMessage");
+    
+    return methodInvokingJobDetailFactoryBean;
+  }
+  
+  public JobDetailFactoryBean complexJobDetail() {
+  
+    JobDetailFactoryBean jobDetailFactoryBean = new JobDetailFactoryBean();
+//    jobDetailFactoryBean.setJobClass(jobClass);
+    
+    Map<String, ?> jobDataMap = null;
+//    jobDataMap.put("anotherBean", value)
+    jobDetailFactoryBean.setJobDataAsMap(jobDataMap);
+    jobDetailFactoryBean.setDurability(Boolean.TRUE);
+    
+    return jobDetailFactoryBean;
+  }
+  
+  /**
+   * Run the job every 2 seconds with initial delay of 1 second
+   * 
+   * @return
+   * @author Ravindu Eranga Abaywardena
+   */
+  public SimpleTriggerFactoryBean simpleTrigger() {
+  
+    SimpleTriggerFactoryBean simpleTriggerFactoryBean = new SimpleTriggerFactoryBean();
+    simpleTriggerFactoryBean.setJobDetail((JobDetail) simpleJobDetail());
+    simpleTriggerFactoryBean.setStartDelay(1000);
+    simpleTriggerFactoryBean.setRepeatInterval(2000);
+    
+    return simpleTriggerFactoryBean;
+  }
+  
+  /**
+   * Run the job every 5 seconds only on weekends
+   * 
+   * @return
+   * @author Ravindu Eranga Abaywardena
+   */
+  public CronTriggerFactoryBean cronTrigger() {
+  
+    CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
+    cronTriggerFactoryBean.setJobDetail((JobDetail) complexJobDetail());
+    cronTriggerFactoryBean.setCronExpression("0/5 * * ? * SAT-SUN");
+    
+    return cronTriggerFactoryBean;
+  }
+  
+  public SchedulerFactoryBean schedulerFactoryBean() {
+  
+    SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
+    schedulerFactoryBean.setJobDetails((JobDetail) simpleJobDetail(), (JobDetail) complexJobDetail());
+    schedulerFactoryBean.setTriggers((Trigger) simpleTrigger(), (Trigger) cronTrigger());
+    
+    return schedulerFactoryBean;
+  }
 }

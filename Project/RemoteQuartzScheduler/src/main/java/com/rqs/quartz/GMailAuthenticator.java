@@ -1,5 +1,5 @@
 // PROJECT : RemoteQuartzScheduler
-// CLASS : RootRestService.java
+// CLASS : GMailAuthenticator.java
 //
 // ************************************************************************************************
 //
@@ -11,22 +11,36 @@
 //
 // REVISIONS:
 // Author : Ravindu Eranga Abayawardena
-// Date : Feb 16, 2015
+// Date : May 19, 2015
 // Version : version 1.0
 //
 // *************************************************************************************************
 
-package com.rqs.test;
+package com.rqs.quartz;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import javax.mail.Authenticator;
+import javax.mail.PasswordAuthentication;
 
 /**
  * 
  * @author Ravindu Eranga Abaywardena
  */
-@ApplicationPath("/rest")
-public class RootRestService extends Application {
+public class GMailAuthenticator extends Authenticator {
   
+  String user;
+  
+  String pw;
+  
+  public GMailAuthenticator(String username, String password) {
+  
+    super();
+    this.user = username;
+    this.pw = password;
+  }
+  
+  public PasswordAuthentication getPasswordAuthentication() {
+  
+    return new PasswordAuthentication(user, pw);
+  }
   
 }
